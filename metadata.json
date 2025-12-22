@@ -1,0 +1,7 @@
+{
+  "name": "Candel - Luxury Scented Candles",
+  "description": "A high-end, minimalist e-commerce experience for artisanal scented candles, featuring an AI-powered scent assistant and smooth Framer Motion animations.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
