@@ -1,16 +1,14 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
-  const location = useLocation();
-
-  const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/shop' },
-    { name: 'AI Assistant', path: '/ai-assistant' },
-  ];
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-neutral-100">
@@ -20,26 +18,27 @@ const Navbar: React.FC = () => {
         </Link>
         
         <div className="hidden md:flex items-center space-x-12">
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="relative text-sm font-medium tracking-wide text-neutral-600 hover:text-neutral-900 transition-colors"
-            >
-              {item.name}
-              {location.pathname === item.path && (
-                <motion.div
-                  layoutId="nav-underline"
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-neutral-900"
-                />
-              )}
-            </Link>
-          ))}
+          <button 
+            onClick={() => scrollToSection('collection')}
+            className="text-xs uppercase tracking-[0.2em] font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
+          >
+            Collection
+          </button>
+          <button 
+            onClick={() => scrollToSection('philosophy')}
+            className="text-xs uppercase tracking-[0.2em] font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
+          >
+            Philosophy
+          </button>
+          <button 
+            onClick={() => scrollToSection('testimonials')}
+            className="text-xs uppercase tracking-[0.2em] font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
+          >
+            Testimonials
+          </button>
         </div>
 
-        <div className="flex items-center space-x-6">
-          <button className="text-sm font-medium hover:opacity-70 transition-opacity">Cart (0)</button>
-        </div>
+        <div className="w-20 hidden md:block"></div> {/* Spacer for symmetry */}
       </div>
     </nav>
   );

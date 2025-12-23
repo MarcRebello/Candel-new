@@ -9,13 +9,13 @@ export interface Product {
   category: 'Woody' | 'Floral' | 'Fresh' | 'Spicy';
 }
 
-export interface CartItem extends Product {
-  quantity: number;
+export interface Testimonial {
+  id: string;
+  content: string;
+  author: string;
+  location: string;
 }
 
 export enum AppRoute {
-  HOME = '/',
-  SHOP = '/shop',
-  ASSISTANT = '/ai-assistant',
-  CHECKOUT = '/checkout'
+  HOME = '/'
 }
