@@ -2,48 +2,44 @@
 import { createClient } from '@supabase/supabase-js';
 
 /**
- * PASTE YOUR KEYS HERE
- * Note: supabaseUrl must start with "https://"
- * Note: supabaseAnonKey is usually a long string starting with "eyJ..."
+ * OPTION A: Environment Variables (Best Practice)
+ * Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in Vercel or your .env file.
  */
-const supabaseUrl = 'sb_publishable_CY-0bKfY356kD-_VDuNAsw_tgSTs6t3'; 
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzbXRza2JuanhwdXdzaW9jeGdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY1MDg2MTQsImV4cCI6MjA4MjA4NDYxNH0.EhrRBUJSSRuET3auYWIx5Gl7yOJ1Z04d-XHYC33zTwE';
+const envUrl = (import.meta as any).env?.VITE_SUPABASE_URL;
+const envKey = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY;
 
-// Only initialize if both URL and Key are provided and valid
-export const supabase = (supabaseUrl && supabaseUrl.startsWith('http') && supabaseAnonKey) 
+/**
+ * OPTION B: Hardcoding (Quick Fix)
+ * If you can't get environment variables to work, paste your strings here:
+ * const supabaseUrl = 'https://your-id.supabase.co';
+ * const supabaseAnonKey = 'your-long-key';
+ */
+const supabaseUrl = envUrl || ''; // PASTE YOUR URL HERE IF NOT USING ENV VARS
+const supabaseAnonKey = envKey || ''; // PASTE YOUR KEY HERE IF NOT USING ENV VARS
+
+export const supabase = (supabaseUrl && supabaseAnonKey) 
   ? createClient(supabaseUrl, supabaseAnonKey) 
   : null;
 
-export const fetchTestimonials = async () => {
+export const fetchReviews = async () => {
   if (!supabase) {
-    console.warn('Supabase is not configured. Returning default data.');
+    console.warn("Supabase not initialized. Check your URL/Key.");
     return [];
   }
-  
-  try {
-    const { data, error } = await supabase
-      .from('testimonials')
-      .select('*')
-      .order('created_at', { ascending: false });
-    
-    if (error) throw error;
-    return data;
-  } catch (err) {
-    console.error('Fetch error:', err);
-    return [];
-  }
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data;
 };
 
-export const submitTestimonial = async (testimonial: { author: string; location: string; content: string }) => {
-  if (!supabase) {
-    throw new Error('Supabase is not configured. Please paste your URL and Anon Key in services/supabase.ts');
-  }
-  
+export const submitReview = async (review: { text: string; author?: string; location?: string }) => {
+  if (!supabase) throw new Error('Supabase not configured');
   const { data, error } = await supabase
-    .from('testimonials')
-    .insert([testimonial])
+    .from('reviews')
+    .insert([review])
     .select();
-  
   if (error) throw error;
   return data;
 };
